@@ -1,0 +1,27 @@
+---
+import { INSTAGRAM_HANDLE, PHONE_DISPLAY, PHONE_TEL } from "../data/config";
+
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t-4 border-zinc-800 bg-black px-4 py-12 text-center font-mono text-xs text-zinc-500">
+  <div class="mx-auto max-w-4xl space-y-4">
+    <a href="/#inicio" class="inline-block font-anton text-4xl tracking-widest text-white">
+      HAMBR<span class="inline-block scale-x-[-1]">E</span>
+    </a>
+    <p>GARÍN ZONA NORTE • CONTENEDOR NOCTURNO</p>
+    <p class="font-bold text-zinc-400">
+      <a href={`tel:${PHONE_TEL}`} class="transition hover:text-punk-yellow">TELÉFONO: {PHONE_DISPLAY}</a>
+      <span> | </span>
+      <a
+        href={`https://instagram.com/${INSTAGRAM_HANDLE}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="transition hover:text-punk-yellow"
+      >
+        INSTAGRAM: @{INSTAGRAM_HANDLE}
+      </a>
+    </p>
+    <p class="text-zinc-600">© {year} HAMBRE STREET FOOD. RAW PUNK & SKATE CULTURE.</p>
+  </div>
+</footer>

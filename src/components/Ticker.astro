@@ -1,0 +1,197 @@
+---
+// src/components/Ticker.astro
+// Cinta superior con texto en movimiento (se repite sin cortes).
+import { PHONE_DISPLAY, PHONE_TEL, INSTAGRAM_HANDLE } from "../data/config";
+
+interface TickerItem {
+  icon: string;
+  text: string;
+  color?: "white";
+  href?: string;
+  accent?: boolean;
+}
+
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+
+// Cuántas veces se repite el bloque. Tiene que alcanzar para cubrir pantallas anchas.
+const REPEAT = 6;
+// Segundos que tarda en correrse un bloque completo (más alto = más lento)
+const SECONDS = 28;
+
+const items: TickerItem[] = [
+  { icon: "patineta", text: "HAMBRE STREET FOOD • BENAVIDEZ ZONA NORTE" },
+  { icon: "flame", text: `TEL: ${PHONE_DISPLAY}`, href: `tel:${PHONE_TEL}` },
+  { icon: "skull", text: `INSTAGRAM: @${INSTAGRAM_HANDLE}`, color: "white", href: `https://instagram.com/${INSTAGRAM_HANDLE}` },
+  { icon: "bolt", text: "PIZZAS • BAJÓN • PANUZZO" },
+];
+---
+
+<div
+  role="region"
+  aria-label="Información de contacto"
+  class:list={[
+    "ticker overflow-hidden border-b-4 border-punk-yellow bg-black text-punk-yellow",
+    className,
+  ]}
+>
+  <div class="track" style={`--n:${REPEAT};--seconds:${SECONDS}s`}>
+    {
+      Array.from({ length: REPEAT }).map((_, g) => (
+        <ul class="group" aria-hidden={g > 0 ? "true" : undefined}>
+          {items.map((item) => (
+            <li
+              class:list={[
+                "item",
+                item.accent && "item-accent",
+                item.color === "white" && "item-white",
+              ]}
+            >
+              {item.icon === "patineta" && (
+                <span class="icon icon-paw" aria-hidden="true">🛹</span>
+              )}
+              {item.icon === "star" && (
+                <span class="icon icon-star" aria-hidden="true">★</span>
+              )}
+              {item.icon === "flame" && (
+                <span class="icon icon-flame" aria-hidden="true">🔥</span>
+              )}
+              {item.icon === "skull" && (
+                <span class="icon icon-skull" aria-hidden="true">💀</span>
+              )}
+              {item.icon === "bolt" && (
+                <span class="icon icon-bolt" aria-hidden="true">⚡</span>
+              )}
+
+              {item.href ? (
+                <a
+                  href={item.href}
+                  tabindex={g > 0 ? -1 : undefined}
+                  target={item.href.startsWith("http") ? "_blank" : undefined}
+                  rel={item.href.startsWith("http") ? "noopener" : undefined}
+                  
+                >
+                  {item.text}
+                </a>
+              ) : (
+                <span>{item.text}</span>
+              )}
+            </li>
+          ))}
+        </ul>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .ticker {
+    /* Bordes que se desvanecen */
+    --accent: #ef2d20;
+    mask-image: linear-gradient(to right, transparent, #000 3%, #000 97%, transparent);
+  }
+
+  .track {
+    display: flex;
+    width: max-content;
+    animation: ticker var(--seconds) linear infinite;
+  }
+
+  /* Se frena al pasar el mouse o al navegar con teclado, para poder tocar los links */
+  .ticker:hover .track,
+  .ticker:focus-within .track {
+    animation-play-state: paused;
+  }
+
+  .group {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    margin: 0;
+    padding: 0.5rem 0;
+    list-style: none;
+  }
+
+  .item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    /* El aire de la derecha separa un ítem del siguiente y empalma el final del bloque con el principio */
+    padding: 0.7rem 2.5rem 0.7rem 0;
+    font-size: 1.20rem;
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .item-accent {
+    color: var(--accent);
+  }
+
+  .item-white {
+    color: #fff;
+  }
+
+  .icon {
+    width: 1.15rem;
+    height: 1.15rem;
+    flex-shrink: 0;
+  }
+  .icon-flame {
+    width: 0.95rem;
+    color: #ff8a1f;
+  }
+  .icon-paw {
+    color: #a3231c;
+  }
+  .icon-star,
+  .icon-bolt {
+    color: var(--accent);
+  }
+  .icon-skull {
+    color: #efe9dc;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+  a:hover,
+  a:focus-visible {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 2px;
+  }
+
+  /* Un bloque entero se corre y vuelve a empezar sin que se note el salto */
+  @keyframes ticker {
+    to {
+      transform: translateX(calc(-100% / var(--n)));
+    }
+  }
+
+  /* Sin movimiento: un solo bloque quieto, centrado si entra y con scroll horizontal si no */
+  @media (prefers-reduced-motion: reduce) {
+    .ticker {
+      mask-image: none;
+      overflow-x: auto;
+    }
+    .track {
+      animation: none;
+    }
+    .group {
+      /* Centra cuando hay lugar y arranca de cero cuando el contenido no entra */
+      margin-inline: auto;
+    }
+    .group:not(:first-child) {
+      display: none;
+    }
+    .item:last-child {
+      padding-right: 0;
+    }
+  }
+</style>

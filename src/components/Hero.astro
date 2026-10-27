@@ -1,0 +1,158 @@
+---
+import { Image } from "astro:assets";
+import herobg from "../assets/images/render_local.png";
+import HambreLogo from "./logo/HambreLogo.astro";
+import { INSTAGRAM_HANDLE, PHONE_DISPLAY, WHATSAPP_NUMBER } from "../data/config";
+---
+
+<section
+  class="relative min-h-[90vh] overflow-hidden border-b-4 border-zinc-800 px-4 py-12 md:px-8"
+>
+  <div id="heroStickersContainer" class="pointer-events-none absolute inset-0 z-30">
+    <div
+      class="sticker-item pointer-events-auto absolute -rotate-12 rounded-xl border-2 border-white bg-black p-3 font-marker text-xs text-punk-yellow sm:text-sm"
+      data-draggable
+      style="top: 2%; right: 4%; left: auto;"
+    >
+      🛹 HOT!
+      <div class="mt-0.5 font-mono text-[9px] text-zinc-400">[¡Arrastrame!]</div>
+    </div>
+    <div
+      class="sticker-item stamp-grunge pointer-events-auto absolute hidden rotate-15 text-xl sm:block"
+      data-draggable
+      style="top: 22%; right: 6%;"
+    >
+      ★ 100% CASERO ★
+    </div>
+    <div
+      class="sticker-item tape-caution pointer-events-auto absolute hidden -rotate-6 px-4 py-1 text-xs sm:block"
+      data-draggable
+      style="bottom: 12%; left: 6%;"
+    >
+      ⚡ BAJÓN NOCTURNO BENAVIDEZ
+    </div>
+    <div
+      class="sticker-item pointer-events-auto absolute hidden rotate-10 rounded-full border-2 border-black bg-punk-red p-2 font-anton text-xs text-white sm:block"
+      data-draggable
+      style="bottom: 18%; right: 12%;"
+    >
+      🧷 FOOD
+    </div>
+  </div>
+
+  <div class="relative z-20 mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-10 lg:grid-cols-12">
+    <div class="space-y-6 lg:col-span-7">
+      <div class="flex flex-wrap items-center gap-3">
+        <span class="tape-caution -rotate-1 px-4 py-1 text-sm">BENAVIDEZ ZONA NORTE</span>
+        <span class="tape-scotch rotate-2 px-4 py-1 font-mono text-xs font-bold text-black">
+          BAR & RESTAURANTE NOCTURNO
+        </span>
+      </div>
+
+      <div class="space-y-1">
+        <h1 class="font-anton text-5xl leading-none tracking-tight text-white uppercase sm:text-7xl md:text-8xl">
+          <HambreLogo class="w-full max-w-md" />
+          <span class="my-2 block -rotate-2 font-rock text-5xl tracking-normal text-punk-orange drop-shadow-[4px_4px_0px_#000] sm:text-6xl md:text-7xl">
+            Pizzas & Panuzzo
+          </span>
+          <span class="block font-glitch text-5xl text-punk-yellow sm:text-7xl">
+            Cervezas.
+          </span>
+        </h1>
+      </div>
+
+      <p class="max-w-xl rounded-r-lg border-y border-r border-zinc-800 border-l-4 border-l-punk-orange bg-black/85 p-4 font-mono text-sm leading-relaxed text-zinc-300 sm:text-base">
+        Pizzas, Panuzzo, Pollo Frito, Papas fritas, Cervezas artesanales. Hacé tu pedido directo por WhatsApp o vení a nuestro local en BENAVIDEZ, Buenos Aires.
+      </p>
+
+      <div class="flex flex-wrap gap-4 pt-2">
+        <a
+          href="#fanzine-menu"
+          data-sfx="kick"
+          class="flex items-center gap-3 rounded border-2 border-black bg-punk-orange px-8 py-3.5 font-anton text-2xl tracking-wider text-black shadow-[6px_6px_0px_#fff] transition hover:shadow-[8px_8px_0px_#ffe600] active:translate-x-1 active:translate-y-1"
+        >
+          <svg class="h-6 w-6 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 2C10.5 5 11 7 8 9.5C6 11.2 4 13.5 4 16.5C4 20 7 22 12 22C17 22 20 20 20 16.5C20 12.5 16.5 10 15 8C14.5 11 12.5 11.5 12 2Z" />
+          </svg>
+          VER MENÚ 
+        </a>
+        <a
+          href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent("Hola HAMBRE! Quiero pedir")}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          data-sfx="click"
+          class="flex items-center gap-3 rounded border-2 border-zinc-700 bg-zinc-900 px-6 py-3.5 font-anton text-xl text-white shadow-[6px_6px_0px_#ff3a00] transition active:translate-x-1 active:translate-y-1 sm:text-2xl"
+        >
+          <svg class="h-6 w-6 text-punk-yellow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.2 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.96.36 1.9.7 2.8a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.84.58 2.8.7A2 2 0 0 1 22 16.92Z" />
+          </svg>
+          {PHONE_DISPLAY}
+        </a>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-4 pt-4 font-mono text-xs text-zinc-400">
+        <a
+          href={`https://instagram.com/${INSTAGRAM_HANDLE}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="flex items-center gap-2 rounded border border-zinc-800 bg-zinc-900 p-2 transition hover:text-punk-yellow"
+        >
+          <svg class="h-4 w-4 text-punk-orange" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="5" />
+            <circle cx="12" cy="12" r="4" />
+            <path d="M17.5 6.5h.01" />
+          </svg>
+          @{INSTAGRAM_HANDLE}
+        </a>
+        <span class="text-zinc-600">•</span>
+        <span>🛵 ENVIOS Y RETIRO EN LOCAL</span>
+      </div>
+    </div>
+
+    <div id="photo-local" class="relative scroll-mt-24 lg:col-span-5">
+      <div class="polaroid-frame relative rotate-2 rounded-xl p-4 shadow-2xl transition duration-300 hover:rotate-0">
+        <div class="tape-duct pointer-events-none absolute -top-4 -left-6 z-20 h-8 w-28 -rotate-12"></div>
+        <div class="tape-scotch pointer-events-none absolute -top-3 -right-6 z-20 h-8 w-28 rotate-12"></div>
+        <div class="pointer-events-none absolute top-2 left-12 z-20 text-xs font-bold text-zinc-700">
+          🧷 [STAPLED]
+        </div>
+
+        <div class="group relative aspect-square overflow-hidden rounded-lg border-2 border-zinc-900 bg-black shadow-inner">
+          <Image
+            src={herobg}
+            alt="Local HAMBRE Contenedor Nocturno"
+            widths={[480, 800, 1200]}
+            sizes="(min-width: 1024px) 40vw, (min-width: 640px) 70vw, 100vw"
+            format="webp"
+            quality={80}
+            loading="eager"
+            fetchpriority="high"
+            class="h-full w-full object-cover scale-150"
+          />
+          <div class="pointer-events-none absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-black/30"></div>
+
+          <div class="absolute top-3 right-3 rounded-full border border-punk-orange bg-black/80 p-2">
+            <svg class="flame-glow h-5 w-5 fill-punk-orange text-punk-orange" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 2C10.5 5 11 7 8 9.5C6 11.2 4 13.5 4 16.5C4 20 7 22 12 22C17 22 20 20 20 16.5C20 12.5 16.5 10 15 8C14.5 11 12.5 11.5 12 2Z" />
+            </svg>
+          </div>
+
+          <div class="absolute right-3 bottom-3 left-3 flex items-center justify-between rounded border border-zinc-800 bg-black/90 p-2.5 font-mono text-xs text-white">
+            <div>
+              <span class="block font-bold text-punk-yellow">HAMBRE</span>
+              <span class="text-[10px] text-zinc-400">Benavidez • BA </span>
+            </div>
+            <span class="rounded bg-punk-orange px-2 py-0.5 font-anton text-xs text-black">FOTO #01</span>
+          </div>
+        </div>
+
+        <div class="pt-4 pb-1 text-center font-rock text-sm tracking-tight text-black">
+          "Pasate por nuestro local y sacate el hambre con nuestras pizzas, panuzzo, papas fritas y cervezas artesanales."
+        </div>
+        <div class="absolute -right-4 -bottom-4 rotate-[-8deg] border-2 border-black bg-punk-yellow px-3 py-1 font-anton text-sm text-black shadow-md">
+          🔥 TEL: {PHONE_DISPLAY}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

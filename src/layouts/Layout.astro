@@ -1,0 +1,38 @@
+---
+// src/layouts/Layout.astro
+import "../styles/global.css";
+import Cart from "../components/Cart.astro";
+import Footer from "../components/Footer.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import Ticker from "../components/Ticker.astro";
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "Street food sin filtro en Garín, Zona Norte." } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Fira+Code:wght@400;600;700&family=Permanent+Marker&family=Rock+Salt&family=Rubik+Glitch&family=Special+Elite&family=UnifrakturMaguntia&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="xerox-grain min-h-screen overflow-x-hidden bg-punk-black font-mono text-punk-paper antialiased selection:bg-punk-yellow selection:text-black">
+    <Ticker />
+    <SiteHeader />
+    <slot />
+    <Cart />
+    <Footer />
+  </body>
+</html>

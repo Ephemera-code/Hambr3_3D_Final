@@ -1,0 +1,181 @@
+@import "tailwindcss";
+
+@theme {
+  --color-punk-black: #08080a;
+  --color-punk-asphalt: #111114;
+  --color-punk-orange: #ff3a00;
+  --color-punk-yellow: #ffe600;
+  --color-punk-red: #d31212;
+  --color-punk-paper: #ded8c8;
+  --font-gothic: "UnifrakturMaguntia", serif;
+  --font-marker: "Permanent Marker", cursive;
+  --font-glitch: "Rubik Glitch", display;
+  --font-anton: "Anton", sans-serif;
+  --font-mono: "Fira Code", monospace;
+  --font-rock: "Rock Salt", cursive;
+  --font-typewriter: "Special Elite", monospace;
+}
+
+@layer base {
+  html {
+    overflow-x: clip;
+    scroll-behavior: smooth;
+    scroll-padding-top: 7rem;
+  }
+
+  body {
+    overflow-x: hidden;
+    background-color: #08080a;
+    background-image:
+      radial-gradient(circle at 50% 50%, rgb(255 58 0 / 8%) 0%, transparent 70%),
+      radial-gradient(rgb(255 230 0 / 4%) 1px, transparent 1px),
+      radial-gradient(rgb(255 255 255 / 2.5%) 1px, transparent 1px);
+    background-size: 100% 100%, 12px 12px, 20px 20px;
+  }
+
+  ::selection {
+    color: #08080a;
+    background: #ffe600;
+  }
+}
+
+.tape-caution {
+  border: 2px solid #08080a;
+  background: #ffe600;
+  box-shadow: 4px 4px 0 #000;
+  color: #08080a;
+  font-family: "Anton", sans-serif;
+  text-transform: uppercase;
+}
+
+.xerox-grain {
+  background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E"),
+    radial-gradient(circle at 50% 50%, rgb(255 58 0 / 8%) 0%, transparent 70%),
+    radial-gradient(rgb(255 230 0 / 4%) 1px, transparent 1px),
+    radial-gradient(rgb(255 255 255 / 2.5%) 1px, transparent 1px);
+  background-size: 200px 200px, 100% 100%, 12px 12px, 20px 20px;
+}
+
+.tape-scotch {
+  border-right: 3px dashed rgb(255 255 255 / 50%);
+  border-left: 3px dashed rgb(255 255 255 / 50%);
+  background: rgb(255 245 200 / 82%);
+  box-shadow: 0 4px 6px rgb(0 0 0 / 50%);
+  backdrop-filter: blur(2px);
+}
+
+.tape-yellow-hazard {
+  border: 2px solid #000;
+  background: repeating-linear-gradient(-45deg, #ffe600, #ffe600 15px, #000 15px, #000 30px);
+  color: #fff;
+}
+
+.tape-duct {
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #222;
+  background: linear-gradient(135deg, #a8a8a8, #686868 50%, #484848);
+  box-shadow: 2px 4px 8px rgb(0 0 0 / 80%);
+}
+
+.jagged-top {
+  clip-path: polygon(
+    0% 12px, 3% 0px, 7% 14px, 11% 2px, 15% 10px, 19% 0px, 23% 15px, 27% 3px,
+    31% 12px, 35% 0px, 39% 10px, 43% 2px, 47% 14px, 51% 0px, 55% 12px, 59% 3px,
+    63% 11px, 67% 0px, 71% 15px, 75% 2px, 79% 12px, 83% 0px, 87% 10px, 91% 3px,
+    95% 14px, 100% 0px, 100% 100%, 0% 100%
+  );
+}
+
+.jagged-bottom {
+  clip-path: polygon(
+    0% 0%, 100% 0%, 100% calc(100% - 12px), 96% 100%, 92% calc(100% - 14px),
+    88% 100%, 84% calc(100% - 8px), 80% 100%, 76% calc(100% - 12px), 72% 100%,
+    68% calc(100% - 6px), 64% 100%, 60% calc(100% - 14px), 56% 100%,
+    52% calc(100% - 8px), 48% 100%, 44% calc(100% - 12px), 40% 100%,
+    36% calc(100% - 6px), 32% 100%, 28% calc(100% - 14px), 24% 100%,
+    20% calc(100% - 8px), 16% 100%, 12% calc(100% - 12px), 8% 100%,
+    4% calc(100% - 6px), 0% 100%
+  );
+}
+
+.polaroid-frame {
+  border: 1px solid #bcbaaf;
+  background: #e5ded0;
+  color: #0d0d0d;
+  box-shadow: 10px 14px 25px rgb(0 0 0 / 65%), inset 0 0 20px rgb(0 0 0 / 8%);
+}
+
+.stamp-grunge {
+  display: inline-block;
+  border: 3px dashed #d31212;
+  border-radius: 4px;
+  color: #d31212;
+  font-family: "Anton", sans-serif;
+  text-transform: uppercase;
+  mask-image: radial-gradient(circle, #000 70%, rgb(0 0 0 / 40%) 100%);
+}
+
+.sticker-item {
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  filter: drop-shadow(5px 5px 0 rgb(0 0 0 / 90%));
+  transition:
+    transform 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    filter 150ms ease;
+}
+
+.sticker-item:hover {
+  transform: scale(1.08) rotate(3deg);
+  filter: drop-shadow(8px 8px 0 #ff3a00);
+}
+
+.sticker-item:active {
+  cursor: grabbing;
+  transform: scale(1.15) rotate(-4deg);
+}
+
+.flame-glow {
+  animation: flame-flicker 2.5s ease-in-out infinite;
+}
+
+.tilt-card {
+  transform-style: preserve-3d;
+  transition: transform 100ms ease-out;
+}
+
+@keyframes flame-flicker {
+  0%, 100% { filter: drop-shadow(0 0 12px #ff3a00) saturate(1.2); }
+  50% { filter: drop-shadow(0 0 4px #ffe600) saturate(0.9); }
+  80% { filter: drop-shadow(0 0 20px #ff3a00) saturate(1.5); }
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  border-left: 2px solid #222;
+  background: #08080a;
+}
+
+::-webkit-scrollbar-thumb {
+  border: 2px solid #000;
+  background: #ff3a00;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

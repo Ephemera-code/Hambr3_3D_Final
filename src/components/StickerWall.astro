@@ -1,0 +1,100 @@
+---
+import { PHONE_DISPLAY } from "../data/config";
+---
+
+<section
+  id="sticker-deck"
+  class="relative scroll-mt-24 overflow-hidden border-y-4 border-zinc-800 bg-zinc-950 px-4 py-20 sm:px-8"
+>
+  <div class="mx-auto max-w-6xl space-y-10">
+    <header class="space-y-3 text-center">
+      <span class="tape-caution px-6 py-1.5 text-xl">WALL OF STICKERS & SKATE DECKS</span>
+      <h2 class="font-anton text-5xl text-white md:text-7xl">
+        PEGATINAS & <span class="text-punk-orange">TABLAS</span>
+      </h2>
+      <p class="mx-auto max-w-xl font-mono text-xs text-zinc-400 sm:text-sm">
+        Explorá y arrastrá los stickers icónicos del fanzine de HAMBRE. Tocá los stickers para activar easter-eggs y frases.
+      </p>
+    </header>
+
+    <div
+      id="stickerWallBoard"
+      class="relative flex min-h-[450px] flex-wrap items-center justify-center gap-8 overflow-hidden rounded-3xl border-4 border-black bg-zinc-900 p-6 shadow-[12px_12px_0px_#ff3a00] sm:p-10"
+    >
+      <div aria-hidden="true" class="pointer-events-none absolute inset-0 flex items-center justify-around opacity-15">
+        <svg class="h-96 w-32 text-white" viewBox="0 0 100 300" fill="currentColor">
+          <rect x="20" y="10" width="60" height="280" rx="30" />
+        </svg>
+        <svg class="h-96 w-32 rotate-45 text-white" viewBox="0 0 100 300" fill="currentColor">
+          <rect x="20" y="10" width="60" height="280" rx="30" />
+        </svg>
+      </div>
+
+      <button
+        type="button"
+        data-draggable
+        data-sticker-message="¡CARNE 100% VACUNO SELECCIONADO! 🔥"
+        class="sticker-item relative flex -rotate-8 items-center gap-3 rounded-3xl border-4 border-black bg-punk-orange p-5 font-anton text-2xl text-black"
+      >
+        <svg class="h-8 w-8 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 2C10.5 5 11 7 8 9.5C6 11.2 4 13.5 4 16.5C4 20 7 22 12 22C17 22 20 20 20 16.5C20 12.5 16.5 10 15 8C14.5 11 12.5 11.5 12 2Z" />
+        </svg>
+        HAMBRE
+      </button>
+
+      <button
+        type="button"
+        data-draggable
+        data-sticker-message="🛹 SKATEBOARDING & STREET FOOD SIN REGLAS!"
+        class="sticker-item relative rotate-12 rounded-2xl border-4 border-white bg-black p-5 font-marker text-xl text-punk-yellow"
+      >
+        🛹 SKATE OR DIE
+      </button>
+
+      <button
+        type="button"
+        data-draggable
+        data-sticker-message="⚡ PRECIOS AMIGABLES Y CALIDAD PREMIUM!"
+        class="sticker-item relative -rotate-15 border-2 border-black bg-punk-yellow p-4 text-left font-mono text-xs text-black shadow-lg"
+      >
+        <span class="block border-b border-black pb-1 font-bold">SUPERMERCADO GARÍN</span>
+        <span class="block py-1 font-anton text-2xl">$ BARATO Y BUENO</span>
+        <span class="block text-[9px]">O39482-HAMBRE-2026</span>
+      </button>
+
+      <button
+        type="button"
+        data-draggable
+        data-sticker-message="💀 CERO CONSERVANTES. CERO DRAMA."
+        class="sticker-item stamp-grunge relative rotate-6 bg-black/60 px-6 py-2 font-anton text-3xl text-punk-red backdrop-blur-sm"
+      >
+        ★ APROBADO★
+      </button>
+
+      <button
+        type="button"
+        data-draggable
+        data-sticker-message={`📞 PEDINOS AL WHATSAPP: ${PHONE_DISPLAY}`}
+        class="sticker-item relative -rotate-5 rounded-xl border-4 border-black bg-emerald-500 p-4 font-anton text-2xl text-black"
+      >
+        📱 WA: {PHONE_DISPLAY}
+      </button>
+
+      <button
+        type="button"
+        data-draggable
+        data-sticker-message="🧷 PUNK ROCK & FAST FOOD!"
+        class="sticker-item relative rotate-18 rounded-lg border-2 border-punk-orange bg-zinc-800 p-4 font-typewriter text-xs text-white"
+      >
+        "SIN CONFORMISMO."<br />SOLO BUENA COMIDA.
+      </button>
+    </div>
+
+    <div
+      id="stickerMsgBox"
+      role="status"
+      aria-live="polite"
+      class="mx-auto hidden max-w-md animate-bounce rounded-lg border-2 border-punk-orange bg-black p-3 text-center font-mono text-sm text-punk-yellow"
+    ></div>
+  </div>
+</section>

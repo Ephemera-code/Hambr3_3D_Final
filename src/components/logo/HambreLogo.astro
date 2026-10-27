@@ -1,0 +1,24 @@
+---
+// src/components/logo/HambreLogo.astro
+// Logo completo: letras + llama animada. Se usa como <HambreLogo class="..." />
+import Flame from "./Flame.astro";
+import { TEXT_PATH } from "../../data/logoPaths";
+
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+---
+
+<svg
+  viewBox="10 100 526 250"
+  class:list={["overflow-visible", className]}
+  role="img"
+  aria-label="Hambre"
+>
+  <!-- Letras -->
+  <path fill="#efe9dc" fill-rule="evenodd" d={TEXT_PATH}></path>
+
+  <!-- Llama animada -->
+  <Flame />
+</svg>

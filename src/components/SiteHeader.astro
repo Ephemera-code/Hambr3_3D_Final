@@ -1,0 +1,180 @@
+---
+---
+
+<header class="sticky top-0 z-40 flex items-center justify-between border-b-2 border-zinc-800 bg-black/95 px-4 py-3 backdrop-blur-md md:px-8">
+  <a href="/#inicio" class="group relative flex items-center gap-2" aria-label="HAMBRE, volver al inicio">
+    <span class="font-anton text-3xl tracking-widest text-white transition group-hover:-rotate-2 group-hover:text-punk-orange sm:text-5xl">
+      HAMBR<span class="inline-block scale-x-[-1]">E</span>
+    </span>
+  </a>
+
+  <div class="ml-auto flex items-center gap-2 sm:gap-3">
+    <button
+      id="sfxBtn"
+      type="button"
+      aria-pressed="true"
+      class="flex items-center gap-2 rounded border-2 border-zinc-700 bg-zinc-900 px-2 py-1.5 font-mono text-[10px] text-zinc-300 transition hover:border-punk-orange sm:px-3 sm:text-xs"
+    >
+      <svg id="sfxIcon" class="h-4 w-4 text-punk-orange" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <path d="M11 5 6 9H2v6h4l5 4V5Z" />
+        <path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14" />
+      </svg>
+      <span id="sfxLabel" class="hidden sm:inline">SFX: ON</span>
+    </button>
+
+  </div>
+</header>
+
+<script>
+  let soundEnabled = true;
+  let audioContext: AudioContext | undefined;
+  const audioConstructor = window.AudioContext;
+  const soundButton = document.getElementById("sfxBtn") as HTMLButtonElement | null;
+  const soundLabel = document.getElementById("sfxLabel");
+  const soundIcon = document.getElementById("sfxIcon");
+
+  if (!audioConstructor && soundButton) {
+    soundEnabled = false;
+    soundButton.disabled = true;
+    soundButton.setAttribute("aria-pressed", "false");
+    if (soundLabel) soundLabel.textContent = "SFX: OFF";
+    soundIcon?.classList.replace("text-punk-orange", "text-zinc-600");
+  }
+
+  function playSfx(type: "click" | "clack" | "kick") {
+    if (!soundEnabled || !audioConstructor) return;
+    audioContext ??= new audioConstructor();
+    if (audioContext.state === "suspended") void audioContext.resume();
+
+    const oscillator = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+    const now = audioContext.currentTime;
+    oscillator.connect(gain);
+    gain.connect(audioContext.destination);
+
+    if (type === "kick") {
+      oscillator.frequency.setValueAtTime(140, now);
+      oscillator.frequency.exponentialRampToValueAtTime(30, now + 0.12);
+      gain.gain.setValueAtTime(0.3, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
+      oscillator.start(now);
+      oscillator.stop(now + 0.12);
+      return;
+    }
+
+    if (type === "clack") oscillator.type = "square";
+    oscillator.frequency.setValueAtTime(type === "clack" ? 580 : 320, now);
+    const duration = type === "clack" ? 0.07 : 0.05;
+    gain.gain.setValueAtTime(type === "clack" ? 0.12 : 0.1, now);
+    gain.gain.exponentialRampToValueAtTime(0.01, now + duration);
+    oscillator.start(now);
+    oscillator.stop(now + duration);
+  }
+
+  soundButton?.addEventListener("click", () => {
+    soundEnabled = !soundEnabled;
+    soundButton.setAttribute("aria-pressed", String(soundEnabled));
+    if (soundLabel) soundLabel.textContent = soundEnabled ? "SFX: ON" : "SFX: OFF";
+    soundIcon?.classList.toggle("text-punk-orange", soundEnabled);
+    soundIcon?.classList.toggle("text-zinc-600", !soundEnabled);
+    if (soundEnabled) playSfx("click");
+  });
+
+  document.addEventListener("click", (event) => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    const button = target.closest<HTMLElement>("[data-sfx]");
+    const sound = button?.dataset.sfx;
+    if (sound === "click" || sound === "clack" || sound === "kick") playSfx(sound);
+  });
+
+  document.querySelectorAll<HTMLButtonElement>("[data-filter]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const filter = button.dataset.filter;
+      document.querySelectorAll<HTMLButtonElement>("[data-filter]").forEach((tab) => {
+        const active = tab === button;
+        tab.setAttribute("aria-pressed", String(active));
+        tab.classList.toggle("active", active);
+        tab.classList.toggle("bg-punk-orange", active);
+        tab.classList.toggle("text-black", active);
+        tab.classList.toggle("border-black", active);
+        tab.classList.toggle("shadow-[4px_4px_0px_#fff]", active);
+        tab.classList.toggle("bg-zinc-900", !active);
+        tab.classList.toggle("text-white", !active);
+        tab.classList.toggle("border-zinc-800", !active);
+      });
+
+      document.querySelectorAll<HTMLElement>("[data-product-card]").forEach((card) => {
+        card.hidden = filter !== "all" && card.dataset.category !== filter;
+      });
+    });
+  });
+
+  document.querySelectorAll<HTMLElement>(".tilt-card").forEach((card) => {
+    card.addEventListener("mousemove", (event) => {
+      const rect = card.getBoundingClientRect();
+      const x = event.clientX - rect.left - rect.width / 2;
+      const y = event.clientY - rect.top - rect.height / 2;
+      card.style.transform = `perspective(1000px) rotateX(${-y / 15}deg) rotateY(${x / 15}deg)`;
+    });
+    card.addEventListener("mouseleave", () => {
+      card.style.transform = `rotate(${card.style.getPropertyValue("--card-rotation") || "0deg"})`;
+    });
+  });
+
+  document.querySelectorAll<HTMLElement>("[data-draggable]").forEach((sticker) => {
+    let pointerId: number | undefined;
+    let startX = 0;
+    let startY = 0;
+    let baseTranslateX = 0;
+    let baseTranslateY = 0;
+    let minX = 0;
+    let maxX = 0;
+    let minY = 0;
+    let maxY = 0;
+
+    sticker.addEventListener("pointerdown", (event) => {
+      if (event.button !== 0) return;
+      const bounds = sticker.getBoundingClientRect();
+      const parent = sticker.parentElement!.getBoundingClientRect();
+      const currentTranslate = getComputedStyle(sticker).translate.split(" ").map(Number.parseFloat);
+      pointerId = event.pointerId;
+      startX = event.clientX;
+      startY = event.clientY;
+      baseTranslateX = Number.isFinite(currentTranslate[0]) ? currentTranslate[0] : 0;
+      baseTranslateY = Number.isFinite(currentTranslate[1]) ? currentTranslate[1] : 0;
+      minX = parent.left - bounds.left;
+      maxX = parent.right - bounds.right;
+      minY = parent.top - bounds.top;
+      maxY = parent.bottom - bounds.bottom;
+      sticker.setPointerCapture(event.pointerId);
+      playSfx("click");
+    });
+
+    sticker.addEventListener("pointermove", (event) => {
+      if (event.pointerId !== pointerId) return;
+      const dx = event.clientX - startX;
+      const dy = event.clientY - startY;
+      const x = Math.min(maxX, Math.max(minX, dx));
+      const y = Math.min(maxY, Math.max(minY, dy));
+
+      sticker.style.translate = `${baseTranslateX + x}px ${baseTranslateY + y}px`;
+    });
+
+    const stopDragging = (event: PointerEvent) => {
+      if (event.pointerId === pointerId) pointerId = undefined;
+    };
+    sticker.addEventListener("pointerup", stopDragging);
+    sticker.addEventListener("pointercancel", stopDragging);
+  });
+
+  const messageBox = document.getElementById("stickerMsgBox");
+  document.querySelectorAll<HTMLElement>("[data-sticker-message]").forEach((sticker) => {
+    sticker.addEventListener("click", () => {
+      if (!messageBox || !sticker.dataset.stickerMessage) return;
+      messageBox.textContent = sticker.dataset.stickerMessage;
+      messageBox.classList.remove("hidden");
+      playSfx("clack");
+    });
+  });
+</script>

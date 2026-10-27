@@ -1,0 +1,138 @@
+---
+// src/components/logo/Flame.astro
+// Va DENTRO de un <svg>. Dibuja el resplandor y las dos llamas (naranja detrás,
+// roja delante) con el efecto de bandera. Las franjas se generan acá abajo.
+import { FLAME_PATH, FLAME_TIP_PATH } from "../../data/logoPaths";
+
+interface Props {
+  /** Prefijo para los ids internos (por si usás el logo dos veces en la misma página) */
+  idPrefix?: string;
+}
+const { idPrefix = "hambre" } = Astro.props;
+
+// ── Ajustes de la animación ────────────────────────────────────────────────
+const TOP = 112;          // borde superior de la llama (viewBox)
+const BOTTOM = 277;       // base de la llama (queda anclada)
+const STRIPS = 80;        // cantidad de franjas horizontales
+const OVERLAP = 1;        // solapamiento entre franjas, evita líneas finas
+const AMPLITUDE = 8;      // cuánto se mueve la punta de lado a lado
+const WAVELENGTH = 120;   // largo de la onda
+const DURATION_FRONT = 2.6; // segundos por ciclo (llama roja)
+const DURATION_BACK = 3.1;  // segundos por ciclo (llama naranja)
+const PHASE_BACK = 0.4;     // desfase de la naranja respecto de la roja
+const BACK_AMPLITUDE = 1.25; // la naranja se mueve un 25% más
+const BACK_SCALE = 1.1;     // la naranja es un 10% más grande
+const BASE_X = 478.4;       // punto de anclaje de la llama (x, y)
+const BASE_Y = 275.5;
+const CLIP_X = 395;
+const CLIP_WIDTH = 190;
+
+const height = BOTTOM - TOP;
+const stripH = height / STRIPS;
+
+const strips = Array.from({ length: STRIPS }, (_, i) => {
+  const y = TOP + i * stripH;
+  const above = BOTTOM - (y + stripH / 2);          // altura sobre la base
+  const amp = AMPLITUDE * Math.pow(above / height, 1.5); // 0 en la base, máximo arriba
+  const lagFront = (above / WAVELENGTH) % 1;
+  const lagBack = (above / WAVELENGTH + PHASE_BACK) % 1;
+  return {
+    i,
+    y: y.toFixed(2),
+    h: (stripH + OVERLAP).toFixed(2),
+    front: `--a:${amp.toFixed(2)}px;animation-duration:${DURATION_FRONT}s;animation-delay:${(-DURATION_FRONT * ((1 - lagFront) % 1)).toFixed(2)}s`,
+    back: `--a:${(amp * BACK_AMPLITUDE).toFixed(2)}px;animation-duration:${DURATION_BACK}s;animation-delay:${(-DURATION_BACK * ((1 - lagBack) % 1)).toFixed(2)}s`,
+  };
+});
+
+const id = (name: string) => `${idPrefix}-${name}`;
+const backTransform = `translate(${BASE_X} ${BASE_Y}) scale(${BACK_SCALE}) translate(${-BASE_X} ${-BASE_Y})`;
+---
+
+<defs>
+  <!-- Forma de la llama: se reutiliza en cada franja -->
+  <g id={id("shape")}>
+    <path fill-rule="evenodd" d={FLAME_PATH}></path>
+    <path fill-rule="evenodd" d={FLAME_TIP_PATH}></path>
+  </g>
+
+  <!-- Una franja horizontal por clip -->
+  {
+    strips.map((s) => (
+      <clipPath id={id(`s${s.i}`)}>
+        <rect x={CLIP_X} y={s.y} width={CLIP_WIDTH} height={s.h}></rect>
+      </clipPath>
+    ))
+  }
+
+  <filter id={id("glow")} x="-60%" y="-60%" width="220%" height="220%">
+    <feGaussianBlur stdDeviation="12"></feGaussianBlur>
+  </filter>
+</defs>
+
+<!-- Resplandor suave -->
+<path
+  class="glow"
+  fill="#ff3b1f"
+  fill-rule="evenodd"
+  filter={`url(#${id("glow")})`}
+  d={FLAME_PATH}></path>
+
+<!-- Llama naranja (detrás): un poco más grande y con la onda desfasada -->
+<g class="flame-back" transform={backTransform}>
+  {
+    strips.map((s) => (
+      <g clip-path={`url(#${id(`s${s.i}`)})`}>
+        <use href={`#${id("shape")}`} class="strip" style={s.back}></use>
+      </g>
+    ))
+  }
+</g>
+
+<!-- Llama roja (delante) -->
+<g class="flame">
+  {
+    strips.map((s) => (
+      <g clip-path={`url(#${id(`s${s.i}`)})`}>
+        <use href={`#${id("shape")}`} class="strip" style={s.front}></use>
+      </g>
+    ))
+  }
+</g>
+
+<style>
+  .glow {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+    animation: glow 2.6s ease-in-out infinite;
+  }
+
+  /* Colores de cada capa (las franjas lo heredan) */
+  .flame      { fill: #c8201a; }
+  .flame-back { fill: #ff7a1a; }
+
+  /* Cada franja oscila de lado a lado. Su amplitud (--a), duración y delay
+     van en el style de cada una (ver arriba): así se forma la onda tipo bandera
+     y la capa naranja va a otro ritmo que la roja. */
+  .strip {
+    animation: wave 1s ease-in-out infinite;
+  }
+
+  @keyframes wave {
+    0%, 50%, 100% { transform: translateX(0); }
+    25%           { transform: translateX(var(--a)); }
+    75%           { transform: translateX(calc(var(--a) * -1)); }
+  }
+
+  @keyframes glow {
+    0%, 100% { opacity: 0.25; }
+    50%      { opacity: 0.45; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .strip,
+    .glow {
+      animation: none;
+    }
+  }
+</style>

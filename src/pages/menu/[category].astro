@@ -1,0 +1,122 @@
+---
+// src/pages/menu/[category].astro
+// Genera una página por categoría: /menu/panuzzo, /menu/pizzas, etc.
+import { Image } from "astro:assets";
+import Layout from "../../layouts/Layout.astro";
+import { categories } from "../../data/categories";
+import { products } from "../../data/products";
+import { productPhoto } from "../../lib/photos";
+import { formatPrice } from "../../lib/format";
+
+export function getStaticPaths() {
+  return categories.map((category) => ({
+    params: { category: category.slug },
+    props: { category },
+  }));
+}
+
+const { category } = Astro.props;
+const items = products.filter((p) => p.category === category.slug);
+---
+
+<Layout
+  title={`${category.name} | Hambre`}
+  description={`Mirá todos nuestros productos de ${category.name.toLowerCase()}.`}
+>
+  <main class="min-h-screen bg-black px-6 pt-8 pb-20 sm:pt-12">
+    <div class="mx-auto max-w-6xl">
+      <!-- Volver -->
+      <a
+        href="/#productos"
+        class="inline-flex items-center gap-2 text-sm font-semibold text-neutral-400 transition hover:text-[#efe9dc]"
+      >
+        <span aria-hidden="true">←</span> Volver
+      </a>
+
+      <!-- Título -->
+      <header class="mt-6 text-center">
+        <h1 class="text-4xl font-extrabold uppercase tracking-wide text-[#efe9dc] sm:text-5xl">
+          {category.name}
+        </h1>
+        <span class="mx-auto mt-4 block h-1 w-16 rounded-full bg-red-600"></span>
+      </header>
+
+      <!-- Cambiar de categoría -->
+      <nav aria-label="Categorías" class="mt-8 flex flex-wrap justify-center gap-2">
+        {
+          categories.map((c) => (
+            <a
+              href={`/menu/${c.slug}`}
+              aria-current={c.slug === category.slug ? "page" : undefined}
+              class:list={[
+                "rounded-full px-4 py-2 text-sm font-semibold transition",
+                c.slug === category.slug
+                  ? "bg-red-600 text-white"
+                  : "bg-neutral-900 text-neutral-300 hover:bg-neutral-800 hover:text-white",
+              ]}
+            >
+              {c.name}
+            </a>
+          ))
+        }
+      </nav>
+
+      <!-- Galería de productos -->
+      {
+        items.length > 0 ? (
+          <ul class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {items.map((product) => {
+              const photo = productPhoto(product.category, product.slug);
+              return (
+                <li class="group flex flex-col overflow-hidden rounded-2xl bg-neutral-900">
+                  <div class="relative aspect-[4/3] overflow-hidden bg-neutral-800">
+                    {photo ? (
+                      <Image
+                        src={photo}
+                        alt={product.name}
+                        widths={[400, 800, 1200]}
+                        sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                        format="webp"
+                        quality={75}
+                        class="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div class="h-full w-full bg-linear-to-br from-neutral-800 to-neutral-950" />
+                    )}
+                  </div>
+
+                  <div class="flex flex-1 flex-col p-5">
+                    <div class="flex items-start justify-between gap-4">
+                      <h2 class="text-lg font-bold text-[#efe9dc]">{product.name}</h2>
+                      <p class="shrink-0 text-lg font-extrabold text-red-500">
+                        {formatPrice(product.price)}
+                      </p>
+                    </div>
+                    <p class="mt-2 flex-1 text-sm leading-relaxed text-neutral-400">
+                      {product.description}
+                    </p>
+
+                    <button
+                      type="button"
+                      data-add
+                      data-id={`${product.category}/${product.slug}`}
+                      data-name={product.name}
+                      data-price={product.price}
+                      class="mt-5 w-full rounded-lg bg-red-600 px-4 py-3 font-semibold text-white transition hover:bg-red-500 active:scale-[0.98]"
+                    >
+                      <span data-label>Agregar al carrito</span>
+                    </button>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        ) : (
+          <p class="mt-16 text-center text-neutral-400">
+            Pronto vas a ver los productos de esta categoría.
+          </p>
+        )
+      }
+    </div>
+  </main>
+</Layout>
